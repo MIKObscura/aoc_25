@@ -1,0 +1,11 @@
+*.txt
+META-INF
+*.class
+*.o
+a.out
+*.beam
+*.toml
+.github
+src
+test
+build
