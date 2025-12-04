@@ -12,7 +12,7 @@ get_twin_nums <- function(range) {
     twins <- list()
     for (n in c(start:end)){
         if (nchar(toString(n)) %% 2 != 0) next
-        if(is_twin_num(n)) twins[length(twins) + 1] <- n
+        if(is_twin_num(n)) twins[length(twins) + 1] <- as.numeric(n)
     }
     twins
 }
@@ -20,10 +20,10 @@ get_twin_nums <- function(range) {
 input_file <- "day2/input.txt"
 input <- read.table(input_file, header = FALSE, sep = ",")
 
-sum <- 0L
+sum <- as.numeric(0)
 for (i in c(1:length(input))){
     twins <- get_twin_nums(input[[i]])
     if(length(twins) == 0) next
     sum <- sum + Reduce("+", twins)
 }
-print(sum) # note: does not fully work, need to figure out how to avoid integer overflow
+print(sum)
