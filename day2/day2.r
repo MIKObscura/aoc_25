@@ -17,9 +17,30 @@ get_twin_nums <- function(range) {
     twins
 }
 
+get_repeating_nums <- function(range) {
+    range_split <- strsplit(toString(range), "-")[[1]]
+    start <- as.numeric(range_split[[1]])
+    end <- as.numeric(range_split[[2]])
+    nums <- list()
+    for (n in c(start:end)) {
+        if (n < 10) next
+        n_str <- toString(n)
+        for(i in seq(nchar(n_str) %/% 2)) {
+            div <- nchar(n_str) %/% i
+            rem <- nchar(n_str) %% i
+            if(rem == 0 && strrep(substring(n_str, 1, i), div) == n_str) {
+                nums[length(nums) + 1] <- as.numeric(n_str)
+                break
+            }
+        }
+    }
+    nums
+}
+
 input_file <- "day2/input.txt"
 input <- read.table(input_file, header = FALSE, sep = ",")
 
+# Part 1
 sum <- as.numeric(0)
 for (i in c(1:length(input))){
     twins <- get_twin_nums(input[[i]])
@@ -27,3 +48,12 @@ for (i in c(1:length(input))){
     sum <- sum + Reduce("+", twins)
 }
 print(sum)
+
+# Part 2
+sum2 <- as.numeric(0)
+for (i in c(1:length(input))){
+    nums <- get_repeating_nums(input[[i]])
+    if(length(nums) == 0) next
+    sum2 <- sum2 + Reduce("+", nums)
+}
+print(sum2)
