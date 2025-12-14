@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <unordered_map>
 
 int main(int argc, char* argv[]){
     std::ifstream input_file("input.txt");
@@ -27,8 +28,11 @@ int main(int argc, char* argv[]){
     int splits = 0;
     int curr_row = 1;
     std::vector<std::pair<int, int>> curr_beams = {start_coord};
-    for(;;){
-        if(curr_row == board.size()) break;
+    std::unordered_map<int, long long> beams = { {start_coord.second, 1LL} };
+    for(;;){ // part 1
+        if(curr_row == board.size()){
+            break;
+        }
         std::vector<std::pair<int, int>> new_beams;
         for(auto it = curr_beams.begin(); it != curr_beams.end(); it++){
             auto next_pos = std::make_pair(curr_row, it->second);
@@ -40,10 +44,25 @@ int main(int argc, char* argv[]){
                 new_beams.push_back(std::make_pair(curr_row, it->second));
             }
         }
+        std::unordered_map<int, long long> new_beams_scores;
+        for(const auto& [k, v]: beams){
+            if(board[curr_row][k] == '.'){
+                new_beams_scores[k] += v;
+            } else {
+                new_beams_scores[k - 1] += v;
+                new_beams_scores[k + 1] += v;
+            }
+        }
+        beams = new_beams_scores;
         std::set<std::pair<int, int>> tmp_beams(new_beams.begin(), new_beams.end());
         new_beams.assign(tmp_beams.begin(), tmp_beams.end());
         curr_beams = new_beams;
         curr_row++;
     }
     std::cout << splits << std::endl;
+    long long timelines = 0LL;
+    for(const auto& [k,v]: beams){
+        timelines += v;
+    }
+    std::cout << timelines << std::endl;
 }
